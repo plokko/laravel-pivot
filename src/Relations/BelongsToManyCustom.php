@@ -64,6 +64,13 @@ class BelongsToManyCustom extends BelongsToMany
         $this->parent->fireModelEvent('pivotModified', false, $this->getRelationName(), ['updated'=>$idsOnly]);
     }
 
+    /**
+     * Sync the intermediate tables with a list of IDs or collection of models.
+     *
+     * @param  \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection|array  $ids
+     * @param  bool   $detaching
+     * @return array
+     */
     public function sync($ids, $detaching = true)
     {
         $this->parent->fireModelEvent('pivotModifying', true, $this->getRelationName());

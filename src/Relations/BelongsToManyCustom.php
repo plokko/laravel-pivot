@@ -20,9 +20,11 @@ class BelongsToManyCustom extends BelongsToMany
     {
         list($idsOnly, $idsAttributes) = $this->getIdsWithAttributes($ids, $attributes);
 
+        $this->parent->fireModelEvent('pivotModifying', true, $this->getRelationName());
         $this->parent->fireModelEvent('pivotAttaching', true, $this->getRelationName(), $idsOnly, $idsAttributes);
         parent::attach($ids, $attributes, $touch);
         $this->parent->fireModelEvent('pivotAttached', false, $this->getRelationName(), $idsOnly, $idsAttributes);
+        $this->parent->fireModelEvent('pivotModified', false, $this->getRelationName(), ['attached'=>$idsOnly]);
     }
 
     /**
@@ -36,9 +38,11 @@ class BelongsToManyCustom extends BelongsToMany
     {
         list($idsOnly) = $this->getIdsWithAttributes($ids);
 
+        $this->parent->fireModelEvent('pivotModifying', true, $this->getRelationName());
         $this->parent->fireModelEvent('pivotDetaching', true, $this->getRelationName(), $idsOnly);
         parent::detach($ids, $touch);
         $this->parent->fireModelEvent('pivotDetached', false, $this->getRelationName(), $idsOnly);
+        $this->parent->fireModelEvent('pivotModified', false, $this->getRelationName(), ['detached'=>$idsOnly]);
     }
 
     /**
@@ -53,9 +57,19 @@ class BelongsToManyCustom extends BelongsToMany
     {
         list($idsOnly, $idsAttributes) = $this->getIdsWithAttributes($id, $attributes);
 
+        $this->parent->fireModelEvent('pivotModifying', true, $this->getRelationName());
         $this->parent->fireModelEvent('pivotUpdating', true, $this->getRelationName(), $idsOnly, $idsAttributes);
         parent::updateExistingPivot($id, $attributes, $touch);
         $this->parent->fireModelEvent('pivotUpdated', false, $this->getRelationName(), $idsOnly, $idsAttributes);
+        $this->parent->fireModelEvent('pivotModified', false, $this->getRelationName(), ['updated'=>$idsOnly]);
+    }
+
+    public function sync($ids, $detaching = true)
+    {
+        $this->parent->fireModelEvent('pivotModifying', true, $this->getRelationName());
+        $result = parent::sync($ids,$detaching);
+        $this->parent->fireModelEvent('pivotModified', false, $this->getRelationName(), $result);
+        return $result;
     }
 
     /**

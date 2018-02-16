@@ -37,6 +37,16 @@ trait PivotEventTrait
         static::registerModelEvent('pivotUpdated', $callback, $priority);
     }
 
+    public static function pivotModifying($callback, $priority = 0)
+    {
+        static::registerModelEvent('pivotModifying', $callback, $priority);
+    }
+    
+    public static function pivotModified($callback, $priority = 0)
+    {
+        static::registerModelEvent('pivotModified', $callback, $priority);
+    }
+    
     /**
      * Get the observable event names.
      *
@@ -52,6 +62,7 @@ trait PivotEventTrait
                 'pivotAttaching', 'pivotAttached',
                 'pivotDetaching', 'pivotDetached',
                 'pivotUpdating', 'pivotUpdated',
+                'pivotModifying', 'pivotModified',
             ],
             $this->observables
         );

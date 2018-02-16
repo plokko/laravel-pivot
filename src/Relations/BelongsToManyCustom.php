@@ -1,5 +1,4 @@
 <?php
-
 namespace Fico7489\Laravel\Pivot\Relations;
 
 use Illuminate\Database\Eloquent\Collection;
